@@ -64,13 +64,14 @@ docs/             SPEC.md, adr/, guia-del-dueno.md (es-MX), runbook.md (en)
 
 ### Commands
 
-Once #2 and #3 land, these exist (check the root `package.json`):
+These exist now (check the root `package.json`):
 
-- `pnpm dev` runs both Workers locally with the Service Binding.
-- `pnpm db:migrate:local` and `pnpm db:seed:local` (the seed is idempotent).
-- `biome ci`, typecheck, `vitest`, Playwright.
+- `pnpm dev` runs the web app and `mise-api` locally with the Service Binding (http://localhost:3000).
+- `pnpm build`, `pnpm lint` (Biome), `pnpm format` (Biome with fixes), `pnpm typecheck`, `pnpm test` (Vitest), `pnpm test:e2e` (Playwright).
+- `pnpm check:lines` and `pnpm check:deps`, the file-size and forbidden-dependency guards that CI runs.
+- `pnpm db:migrate:local` and `pnpm db:seed:local` arrive with #3.
 
-Update this section when the real scripts exist.
+Update this section when the real scripts change.
 
 ## Hard constraints
 

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.6.8/schema.json",
+  "root": true,
+  "extends": ["./packages/config/biome.json"],
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/dist",
+      "!**/.wrangler",
+      "!**/.turbo",
+      "!**/.tanstack",
+      "!**/routeTree.gen.ts",
+      "!**/*.css",
+      "!**/*.md",
+      "!mocks",
+      "!.claude",
+      "!.superpowers",
+      "!docs"
+    ]
+  }
+}
