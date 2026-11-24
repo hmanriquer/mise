@@ -5,15 +5,18 @@
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
-    "lint": "turbo lint",
-    "format": "turbo format",
-    "typecheck": "turbo typecheck"
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "check:lines": "node packages/config/scripts/check-lines.mjs",
+    "check:deps": "node packages/config/scripts/check-forbidden-deps.mjs"
   },
   "devDependencies": {
-    "prettier": "^3.10.1",
-    "prettier-plugin-tailwindcss": "^0.8.1",
+    "@biomejs/biome": "^2.6.8",
     "turbo": "^2.11.11",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.2",
+    "vitest": "^5.1.1"
   },
   "packageManager": "pnpm@11.25.0",
   "engines": {
