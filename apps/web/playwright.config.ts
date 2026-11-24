@@ -17,6 +17,7 @@ const TRACE_MODE = "on-first-retry"
 export default defineConfig({
   testDir: E2E_DIRECTORY,
   fullyParallel: true,
+  forbidOnly: !!process.env.CI,
   workers: process.env.CI ? os.cpus().length : undefined,
   retries: process.env.CI ? CI_RETRIES : LOCAL_RETRIES,
   reporter: process.env.CI ? [...CI_REPORTERS] : LOCAL_REPORTER,

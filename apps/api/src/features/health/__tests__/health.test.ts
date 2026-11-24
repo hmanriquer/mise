@@ -1,5 +1,5 @@
 import { SELF } from "cloudflare:test"
-import { healthResponseSchema } from "@workspace/contracts"
+import { HEALTH_STATUS, healthResponseSchema } from "@workspace/contracts"
 import { describe, expect, it } from "vitest"
 
 const ORIGIN = "http://mise.test"
@@ -14,7 +14,7 @@ describe("GET /api/health", () => {
 
     expect(response.status).toBe(200)
     expect(healthResponseSchema.parse(await response.json())).toEqual({
-      status: "ok",
+      status: HEALTH_STATUS.ok,
       version: CONFIGURED_VERSION,
     })
   })
