@@ -7,8 +7,8 @@ import { listPackageDirectories, toRepoRelativePath } from "./lib/workspace.mjs"
 const REPO_ROOT = process.cwd()
 const EXIT_FAILURE = 1
 const SOURCE_SUBFOLDERS_BY_GROUP = {
-  apps: ["src", "scripts", "e2e"],
-  packages: ["src", "scripts"],
+  apps: ["src", "scripts", "e2e", "__tests__"],
+  packages: ["src", "scripts", "__tests__"],
 }
 
 function collectSourceRoots() {
