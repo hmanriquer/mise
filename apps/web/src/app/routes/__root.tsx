@@ -1,6 +1,8 @@
 import { createRootRoute, HeadContent, Link, Scripts } from "@tanstack/react-router"
 import { buttonVariants } from "@workspace/ui/components/button"
+import { Toaster } from "@workspace/ui/components/sonner"
 import appCss from "@workspace/ui/globals.css?url"
+import { PWA_HEAD, PwaUpdatePrompt } from "@/features/pwa"
 import { ROUTES, SHARED_COPY } from "@/features/shared"
 
 const HTML_LANGUAGE = "es-MX"
@@ -16,6 +18,10 @@ export const Route = createRootRoute({
         content: "width=device-width, initial-scale=1",
       },
       {
+        name: "theme-color",
+        content: PWA_HEAD.themeColor,
+      },
+      {
         title: SHARED_COPY.appName,
       },
     ],
@@ -23,6 +29,19 @@ export const Route = createRootRoute({
       {
         rel: "stylesheet",
         href: appCss,
+      },
+      {
+        rel: "manifest",
+        href: PWA_HEAD.manifestPath,
+      },
+      {
+        rel: "icon",
+        href: PWA_HEAD.iconPath,
+        type: PWA_HEAD.iconType,
+      },
+      {
+        rel: "apple-touch-icon",
+        href: PWA_HEAD.appleTouchIconPath,
       },
     ],
   }),
@@ -49,6 +68,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
+        <Toaster theme="light" />
+        <PwaUpdatePrompt />
         <Scripts />
       </body>
     </html>

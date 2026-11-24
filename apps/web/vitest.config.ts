@@ -16,5 +16,6 @@ export default defineConfig({
   test: {
     environment: TEST_ENVIRONMENT,
     setupFiles: [SETUP_FILE],
+    include: ["src/**/*.test.{ts,tsx}", "scripts/__tests__/**/*.test.mjs"],
   },
 })
