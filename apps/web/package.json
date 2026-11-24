@@ -7,7 +7,8 @@
     "dev": "vite dev --port 3000",
     "generate-routes": "tsr generate",
     "build": "vite build",
-    "preview": "vite preview",
+    "preview": "vite preview --port 4173",
+    "deploy": "wrangler deploy",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"
   },
@@ -15,23 +16,30 @@
     "@hugeicons/core-free-icons": "^4.4.0",
     "@hugeicons/react": "^1.1.10",
     "@tailwindcss/vite": "^4",
-    "@tanstack/react-devtools": "latest",
     "@tanstack/react-router": "latest",
-    "@tanstack/react-router-devtools": "latest",
     "@tanstack/react-start": "latest",
+    "@workspace/contracts": "workspace:*",
     "@workspace/ui": "workspace:*",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "tailwindcss": "^4"
   },
   "devDependencies": {
-    "@tanstack/devtools-vite": "latest",
+    "@cloudflare/vite-plugin": "^1.70.1",
+    "@cloudflare/workers-types": "^5.20261116.1",
     "@tanstack/router-cli": "^1.168.0",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^8.0.0",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.13",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6",
+    "happy-dom": "^21.0.4",
     "typescript": "^6.0.2",
-    "vite": "^8"
+    "vite": "^8",
+    "vitest": "^5.1.1",
+    "wrangler": "^4.163.0"
   }
 }
