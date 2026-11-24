@@ -5,7 +5,17 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", ".wrangler/deploy/**"]
+    },
+    "web#build": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*",
+        "$TURBO_ROOT$/apps/api/src/**",
+        "$TURBO_ROOT$/apps/api/wrangler.jsonc"
+      ],
+      "outputs": ["dist/**", ".wrangler/deploy/**"]
     },
     "typecheck": {
       "dependsOn": ["^typecheck"]
