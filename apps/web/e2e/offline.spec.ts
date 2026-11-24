@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test"
 import { HOME_COPY } from "../src/features/home/constants/copy"
 import { SELL_COPY } from "../src/features/selling/constants/copy"
+import { collectPageErrors } from "./helpers/page-errors"
 import { waitForServiceWorkerControl } from "./helpers/service-worker"
 
 const HOME_PATH = "/"
@@ -16,6 +17,7 @@ const FAILED_RESULT = "failed"
 
 test.describe("offline shell", () => {
   test("reloads / and /vender offline", async ({ page, context }) => {
+    const pageErrors = collectPageErrors(page)
     // Only / is visited online: /vender must come from the install-time precache, not an earlier visit.
     await page.goto(HOME_PATH)
     await waitForServiceWorkerControl(page)
@@ -26,6 +28,8 @@ test.describe("offline shell", () => {
 
     await page.goto(SELL_PATH)
     await expect(page.getByRole("heading", { level: 1, name: SELL_COPY.title })).toBeVisible()
+
+    expect(pageErrors).toEqual([])
   })
 
   test("never serves /api from the service worker cache", async ({ page, context }) => {
