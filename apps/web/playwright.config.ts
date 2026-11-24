@@ -10,14 +10,19 @@ const SERVER_START_TIMEOUT_MS = 180_000
 const CI_RETRIES = 1
 const LOCAL_RETRIES = 0
 const CHROMIUM_PROJECT_NAME = "chromium"
+const CI_REPORTERS = [["dot"], ["html", { open: "never" }]] as const
+const LOCAL_REPORTER = "list"
+const TRACE_MODE = "on-first-retry"
 
 export default defineConfig({
   testDir: E2E_DIRECTORY,
   fullyParallel: true,
   workers: process.env.CI ? os.cpus().length : undefined,
   retries: process.env.CI ? CI_RETRIES : LOCAL_RETRIES,
+  reporter: process.env.CI ? [...CI_REPORTERS] : LOCAL_REPORTER,
   use: {
     baseURL: BASE_URL,
+    trace: TRACE_MODE,
   },
   projects: [
     {
