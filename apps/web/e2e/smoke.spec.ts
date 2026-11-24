@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test"
 import { HOME_COPY } from "../src/features/home/constants/copy"
+import { SELL_COPY } from "../src/features/selling/constants/copy"
 
 const HOME_PATH = "/"
 const HEALTH_PATH = "/api/health"
@@ -9,6 +10,7 @@ const MANIFEST_LINK_SELECTOR = 'link[rel="manifest"]'
 const MANIFEST_NAME = "Mise"
 const MANIFEST_START_URL = "/"
 const HEADING_FONT_PATTERN = /Manrope/
+const SHELL_PATH = "/_shell.html"
 // Chromium reports oklch() colours back in the same notation, so the token is compared verbatim.
 const PRIMARY_BACKGROUND = "oklch(0.525 0.223 3.958)"
 
@@ -48,5 +50,14 @@ test.describe("smoke", () => {
       name: MANIFEST_NAME,
       start_url: MANIFEST_START_URL,
     })
+  })
+
+  test("serves a root-only SPA shell with no pre-rendered page content", async ({ request }) => {
+    const response = await request.get(SHELL_PATH)
+
+    expect(response.status()).toBe(HTTP_OK)
+    const body = await response.text()
+    expect(body).not.toContain(HOME_COPY.subtitle)
+    expect(body).not.toContain(SELL_COPY.subtitle)
   })
 })
