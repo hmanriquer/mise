@@ -1,0 +1,54 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Never cancel a production deploy in progress.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+
+      # D1 migrations (`wrangler d1 migrations apply mise --remote`) join this job in #3,
+      # before the API deploy, so the schema is ready when the new code starts.
+
+      # The API goes first: mise-web's Service Binding needs mise-api to exist.
+      - name: Deploy mise-api
+        shell: bash
+        run: pnpm --filter api exec wrangler deploy --var "APP_VERSION:${GITHUB_SHA::7}"
+
+      - name: Deploy mise-web
+        run: pnpm --filter web exec wrangler deploy
+
+      - name: Smoke test production
+        if: ${{ vars.MISE_WEB_URL != '' }}
+        env:
+          WEB_URL: ${{ vars.MISE_WEB_URL }}
+        run: curl -fsS "$WEB_URL/api/health"
+
+      - name: Skip smoke test
+        if: ${{ vars.MISE_WEB_URL == '' }}
+        run: echo "::notice::Smoke test skipped. Set the MISE_WEB_URL repository variable to enable it."
