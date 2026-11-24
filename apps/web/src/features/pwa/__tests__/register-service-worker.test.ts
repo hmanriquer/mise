@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest"
-import { SKIP_WAITING_MESSAGE } from "../constants/service-worker"
+import { SERVICE_WORKER_URL, SKIP_WAITING_MESSAGE } from "../constants/service-worker"
 import { registerServiceWorker } from "../helpers/register-service-worker"
 import type { UpdateHandler } from "../types/service-worker"
 
@@ -51,7 +51,7 @@ describe("registerServiceWorker", () => {
 
     await registerServiceWorker(dependencies)
 
-    expect(container.register).toHaveBeenCalledWith("/sw.js")
+    expect(container.register).toHaveBeenCalledWith(SERVICE_WORKER_URL)
   })
 
   it("does not prompt when the first worker installs", async () => {
@@ -112,6 +112,52 @@ describe("registerServiceWorker", () => {
     container.dispatchEvent(new Event("controllerchange"))
 
     expect(reload).not.toHaveBeenCalled()
+  })
+
+  it("prompts once a worker already installing at registration reaches installed", async () => {
+    const { registration, onUpdateAvailable, dependencies } = setup({
+      controller: new FakeWorker(),
+    })
+    const installingWorker = new FakeWorker()
+    registration.installing = installingWorker
+
+    await registerServiceWorker(dependencies)
+    expect(onUpdateAvailable).not.toHaveBeenCalled()
+
+    registration.waiting = installingWorker
+    installingWorker.state = "installed"
+    installingWorker.dispatchEvent(new Event("statechange"))
+
+    expect(onUpdateAvailable).toHaveBeenCalledTimes(1)
+  })
+
+  it("reloads immediately when the update was already applied from another tab", async () => {
+    const { registration, onUpdateAvailable, reload, dependencies } = setup({
+      controller: new FakeWorker(),
+      waiting: new FakeWorker(),
+    })
+    await registerServiceWorker(dependencies)
+    const [applyUpdate] = onUpdateAvailable.mock.calls[0]
+    registration.waiting = null
+
+    applyUpdate()
+
+    expect(reload).toHaveBeenCalledTimes(1)
+  })
+
+  it("reloads once when the update is requested twice", async () => {
+    const { container, onUpdateAvailable, reload, dependencies } = setup({
+      controller: new FakeWorker(),
+      waiting: new FakeWorker(),
+    })
+    await registerServiceWorker(dependencies)
+    const [applyUpdate] = onUpdateAvailable.mock.calls[0]
+
+    applyUpdate()
+    applyUpdate()
+    container.dispatchEvent(new Event("controllerchange"))
+
+    expect(reload).toHaveBeenCalledTimes(1)
   })
 
   it("resolves quietly when registration fails", async () => {

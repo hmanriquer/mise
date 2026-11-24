@@ -19,6 +19,9 @@ export async function registerServiceWorker({
     }
   }
 
+  if (registration.installing !== null) {
+    watchInstallingWorker(registration, notifyIfUpdateReady)
+  }
   if (registration.waiting !== null) {
     notifyIfUpdateReady()
   }
@@ -51,13 +54,24 @@ function watchInstallingWorker(registration: ServiceWorkerRegistration, onInstal
 }
 
 // Reloading is deferred until the user asks for it, and only once the new worker has taken control.
+// If another tab already applied the update there is nothing to wait for, so the page reloads now.
 function createApplyUpdate(
   container: ServiceWorkerContainer,
   registration: ServiceWorkerRegistration,
   reload: () => void,
 ): () => void {
+  let reloadRequested = false
   return () => {
+    if (reloadRequested) {
+      return
+    }
+    reloadRequested = true
+    const waitingWorker = registration.waiting
+    if (waitingWorker === null) {
+      reload()
+      return
+    }
     container.addEventListener("controllerchange", reload, { once: true })
-    registration.waiting?.postMessage(SKIP_WAITING_MESSAGE)
+    waitingWorker.postMessage(SKIP_WAITING_MESSAGE)
   }
 }
