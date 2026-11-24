@@ -6,17 +6,19 @@ import { waitForServiceWorkerControl } from "./helpers/service-worker"
 const HOME_PATH = "/"
 const SELL_PATH = "/vender"
 const API_HEALTH_PATH = "/api/health"
+const API_UNKNOWN_PATH = "/api/nope"
 const HTTP_OK = 200
+const HTTP_NOT_FOUND = 404
+const HEALTH_OK_STATUS = "ok"
 const API_PATH_PATTERN = /^\/api(\/|$)/
 const SERVED_RESULT = "served"
 const FAILED_RESULT = "failed"
 
 test.describe("offline shell", () => {
   test("reloads / and /vender offline", async ({ page, context }) => {
+    // Only / is visited online: /vender must come from the install-time precache, not an earlier visit.
     await page.goto(HOME_PATH)
     await waitForServiceWorkerControl(page)
-    await page.goto(SELL_PATH)
-    await page.goto(HOME_PATH)
 
     await context.setOffline(true)
     await page.reload()
@@ -60,5 +62,20 @@ test.describe("offline shell", () => {
       { path: API_HEALTH_PATH, servedResult: SERVED_RESULT, failedResult: FAILED_RESULT },
     )
     expect(offlineResult).toBe(FAILED_RESULT)
+  })
+
+  test("navigations under /api reach the API, not the SPA shell", async ({ page }) => {
+    await page.goto(HOME_PATH)
+    await waitForServiceWorkerControl(page)
+
+    // A controlled navigation is what the navigateFallbackDenylist guards; fetch() subresources are not.
+    const healthResponse = await page.goto(API_HEALTH_PATH)
+    expect(healthResponse?.fromServiceWorker()).toBe(false)
+    expect(healthResponse?.status()).toBe(HTTP_OK)
+    expect(await healthResponse?.json()).toMatchObject({ status: HEALTH_OK_STATUS })
+
+    const unknownResponse = await page.goto(API_UNKNOWN_PATH)
+    expect(unknownResponse?.fromServiceWorker()).toBe(false)
+    expect(unknownResponse?.status()).toBe(HTTP_NOT_FOUND)
   })
 })
