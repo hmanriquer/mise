@@ -13,6 +13,10 @@ __unconfig*
 todos.json
 .superpowers/
 
+# playwright
+playwright-report/
+test-results/
+
 # turbo
 .turbo
 

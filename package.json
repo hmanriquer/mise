@@ -9,6 +9,7 @@
     "format": "biome check --write .",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
+    "test:e2e": "pnpm --filter web test:e2e",
     "check:lines": "node packages/config/scripts/check-lines.mjs",
     "check:deps": "node packages/config/scripts/check-forbidden-deps.mjs"
   },
