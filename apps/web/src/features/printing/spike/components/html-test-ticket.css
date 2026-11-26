@@ -1,0 +1,12 @@
+/* Paper size comes from the POS58 driver (58 mm roll): CSS cannot express a roll with no fixed
+   height. Zero page margins keep the ticket on the printable 48 mm and also stop Chrome printing
+   its date/URL header and footer. */
+@page {
+  margin: 0;
+}
+
+@media print {
+  .html-test-ticket {
+    width: 48mm;
+  }
+}
