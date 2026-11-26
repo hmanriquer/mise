@@ -16,6 +16,7 @@
       "!**/.turbo",
       "!**/.tanstack",
       "!**/routeTree.gen.ts",
+      "!packages/db/migrations",
       "!**/*.css",
       "!**/*.md",
       "!mocks",
