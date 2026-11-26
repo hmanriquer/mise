@@ -6,6 +6,14 @@
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": false,
   "preview_urls": false,
+  // No database_id: wrangler finds the "mise" database by name, and `wrangler deploy` binds to it.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "mise",
+      "migrations_dir": "../../packages/db/migrations"
+    }
+  ],
   "vars": {
     "APP_VERSION": "dev"
   },

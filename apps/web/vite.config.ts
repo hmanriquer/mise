@@ -6,6 +6,9 @@ import { defineConfig } from "vite"
 
 const SSR_ENVIRONMENT_NAME = "ssr"
 const API_WRANGLER_CONFIG = "../api/wrangler.jsonc"
+// Shared with `wrangler d1 … --local` (run from apps/api), so `pnpm db:migrate:local` and
+// `pnpm db:seed:local` fill the same local D1 that `pnpm dev` reads.
+const LOCAL_STATE_PATH = "../api/.wrangler/state"
 const ROUTER_ENTRY = "app/router.tsx"
 const ROUTES_DIRECTORY = "app/routes"
 const GENERATED_ROUTE_TREE = "app/routeTree.gen.ts"
@@ -21,6 +24,7 @@ const config = defineConfig({
     cloudflare({
       viteEnvironment: { name: SSR_ENVIRONMENT_NAME },
       auxiliaryWorkers: [{ configPath: API_WRANGLER_CONFIG }],
+      persistState: { path: LOCAL_STATE_PATH },
     }),
     tailwindcss(),
     tanstackStart({

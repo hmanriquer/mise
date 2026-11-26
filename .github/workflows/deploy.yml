@@ -31,8 +31,14 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
 
-      # D1 migrations (`wrangler d1 migrations apply mise --remote`) join this job in #3,
-      # before the API deploy, so the schema is ready when the new code starts.
+      # Migrations run before the API deploy, so the schema is ready when the new code starts.
+      # Keep migrations additive (expand now, contract in a later deploy) so the old API keeps
+      # working against the new schema until its deploy finishes.
+      - name: Apply D1 migrations
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: pnpm db:migrate:remote
 
       # The API goes first: mise-web's Service Binding needs mise-api to exist.
       - name: Deploy mise-api
