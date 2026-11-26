@@ -14,8 +14,12 @@
       "migrations_dir": "../../packages/db/migrations"
     }
   ],
+  // Local dev values. deploy.yml overrides AUTH_* from the MISE_WEB_URL repository variable.
+  // Secrets (BETTER_AUTH_SECRET, OWNER_BOOTSTRAP_TOKEN) come from .dev.vars or `wrangler secret`.
   "vars": {
-    "APP_VERSION": "dev"
+    "APP_VERSION": "dev",
+    "AUTH_RP_ID": "localhost",
+    "AUTH_ORIGIN": "http://localhost:3000"
   },
   "observability": {
     "enabled": true

@@ -8,16 +8,21 @@
     "deploy": "wrangler deploy",
     "build": "wrangler deploy --dry-run --outdir dist",
     "test": "vitest run --passWithNoTests",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "auth:schema": "auth generate --config scripts/auth-schema.config.ts --output ../../packages/db/src/schema/auth.ts --yes && biome format --write ../../packages/db/src/schema/auth.ts"
   },
   "dependencies": {
+    "@better-auth/passkey": "^1.7.28",
     "@workspace/contracts": "workspace:*",
+    "@workspace/db": "workspace:*",
+    "better-auth": "^1.7.28",
     "hono": "^4.13.19",
     "zod": "^4.6.7"
   },
   "devDependencies": {
     "@cloudflare/vitest-plugin": "^1.8.3",
     "@cloudflare/workers-types": "^5.20261116.1",
+    "auth": "1.7.28",
     "typescript": "^6.0.2",
     "vitest": "^5.1.1",
     "wrangler": "^4.163.0"
