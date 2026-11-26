@@ -20,6 +20,12 @@ const TABLES_IN_DELETE_ORDER = [
   schema.product,
   schema.category,
   schema.businessProfile,
+  schema.passkey,
+  schema.session,
+  schema.account,
+  schema.verification,
+  schema.rateLimit,
+  schema.user,
 ]
 
 await applyD1Migrations(env.DB, env.TEST_MIGRATIONS)

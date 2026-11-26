@@ -1,0 +1,5 @@
+# Copy to .dev.vars for `pnpm dev`. Never commit .dev.vars.
+# Generate each value with: openssl rand -base64 32
+BETTER_AUTH_SECRET=
+# Only until the owner exists; then remove it (see docs/runbook.md).
+OWNER_BOOTSTRAP_TOKEN=
