@@ -4,10 +4,27 @@
   "type": "module",
   "private": true,
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./seed": "./src/seed/index.ts"
   },
   "scripts": {
-    "test": "vitest run --passWithNoTests",
+    "generate": "drizzle-kit generate",
+    "seed:sql": "tsx scripts/write-seed-sql.ts",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@workspace/contracts": "workspace:*",
+    "drizzle-orm": "^0.45.4"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-plugin": "^1.9.0",
+    "@cloudflare/workers-types": "^5.20261123.1",
+    "@types/node": "^22.20.5",
+    "drizzle-kit": "^0.31.11",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "vitest": "^5.1.1",
+    "wrangler": "^4.166.0"
   }
 }

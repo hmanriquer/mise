@@ -11,7 +11,12 @@
     "test": "turbo test",
     "test:e2e": "pnpm --filter web test:e2e",
     "check:lines": "node packages/config/scripts/check-lines.mjs",
-    "check:deps": "node packages/config/scripts/check-forbidden-deps.mjs"
+    "check:deps": "node packages/config/scripts/check-forbidden-deps.mjs",
+    "db:generate": "pnpm --filter @workspace/db generate",
+    "db:migrate:local": "pnpm --filter api exec wrangler d1 migrations apply mise --local",
+    "db:migrate:remote": "pnpm --filter api exec wrangler d1 migrations apply mise --remote",
+    "db:seed:local": "pnpm --filter @workspace/db seed:sql && pnpm --filter api exec wrangler d1 execute mise --local --file ../../packages/db/dist/seed.sql",
+    "db:seed:remote": "pnpm --filter @workspace/db seed:sql && pnpm --filter api exec wrangler d1 execute mise --remote --file ../../packages/db/dist/seed.sql"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.8",

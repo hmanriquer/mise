@@ -69,7 +69,7 @@ These exist now (check the root `package.json`):
 - `pnpm dev` runs the web app and `mise-api` locally with the Service Binding (http://localhost:3000).
 - `pnpm build`, `pnpm lint` (Biome), `pnpm format` (Biome with fixes), `pnpm typecheck`, `pnpm test` (Vitest), `pnpm test:e2e` (Playwright).
 - `pnpm check:lines` and `pnpm check:deps`, the file-size and forbidden-dependency guards that CI runs.
-- `pnpm db:migrate:local` and `pnpm db:seed:local` arrive with #3.
+- `pnpm db:generate` (drizzle-kit generate into `packages/db/migrations`), `pnpm db:migrate:local` / `db:migrate:remote`, `pnpm db:seed:local` / `db:seed:remote` (idempotent menu seed through `wrangler d1 execute`). Local D1 state lives in `apps/api/.wrangler/state`, shared with `pnpm dev`.
 
 Update this section when the real scripts change.
 

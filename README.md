@@ -13,6 +13,8 @@ Build plan and status: [tracker #22](https://github.com/hmanriquer/mise/issues/2
 
 ```sh
 pnpm install
+pnpm db:migrate:local
+pnpm db:seed:local
 pnpm dev
 ```
 
@@ -31,6 +33,9 @@ Open http://localhost:3000. It serves the SPA and forwards `/api/*` to `mise-api
 | `pnpm test:e2e` | Runs the Playwright end-to-end tests (builds and previews the web app). |
 | `pnpm check:lines` | Fails when a file exceeds the non-blank line limits. |
 | `pnpm check:deps` | Fails when a forbidden package (Radix, Lucide) appears in a `package.json`. |
+| `pnpm db:generate` | Generates a D1 migration in `packages/db/migrations` from the Drizzle schema. |
+| `pnpm db:migrate:local` / `db:migrate:remote` | Applies pending migrations to the local or production D1 (`mise`). |
+| `pnpm db:seed:local` / `db:seed:remote` | Inserts the Reina de Espadas menu. Safe to re-run: rows that exist are left as they are. |
 
 ## Layout
 
@@ -39,7 +44,7 @@ apps/web            TanStack Start SPA + fetch handler that forwards /api/* to m
 apps/api            Hono Worker (mise-api)
 packages/ui         generated shadcn components (@workspace/ui)
 packages/contracts  zod schemas, as-const enums, money/date helpers, canonical payload hash
-packages/db         placeholder: Drizzle schema and migrations arrive with #3
+packages/db         Drizzle schema, D1 migrations and the typed menu seed
 packages/config     shared tsconfig, Biome config and check scripts
 ```
 
@@ -50,7 +55,8 @@ Pushing to `main` runs `.github/workflows/deploy.yml`. It builds the repo, deplo
 - **Required secrets:** `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`.
 - **Optional variable:** `MISE_WEB_URL` (for example `https://mise-web.<account>.workers.dev`). When it is unset, the smoke test is skipped with a notice.
 - **First deploy:** `mise-api` must exist before `mise-web`, because the Service Binding in `mise-web` points at it. The workflow already deploys in that order.
-- **D1 migrations** join the workflow in #3, before the API deploy.
+- **D1 migrations:** the workflow runs `pnpm db:migrate:remote` before the API deploy. Write migrations so the previous API version still works against the new schema.
+- **First deploy:** create the database once with `pnpm --filter api exec wrangler d1 create mise` (the config finds it by name, so no `database_id` is committed). After the first deploy, run `pnpm db:seed:remote` once to load the menu. Do not re-run it to "reset" the menu: it only inserts missing rows.
 
 ## Changing the domain
 
