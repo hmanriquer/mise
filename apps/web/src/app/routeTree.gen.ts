@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PruebaImpresoraRouteImport } from './routes/prueba-impresora'
 import { Route as VenderRouteImport } from './routes/vender'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PruebaImpresoraRoute = PruebaImpresoraRouteImport.update({
+  id: '/prueba-impresora',
+  path: '/prueba-impresora',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VenderRoute = VenderRouteImport.update({
@@ -25,27 +31,31 @@ const VenderRoute = VenderRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/prueba-impresora': typeof PruebaImpresoraRoute
   '/vender': typeof VenderRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/prueba-impresora': typeof PruebaImpresoraRoute
   '/vender': typeof VenderRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/prueba-impresora': typeof PruebaImpresoraRoute
   '/vender': typeof VenderRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/vender'
+  fullPaths: '/' | '/prueba-impresora' | '/vender'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/vender'
-  id: '__root__' | '/' | '/vender'
+  to: '/' | '/prueba-impresora' | '/vender'
+  id: '__root__' | '/' | '/prueba-impresora' | '/vender'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PruebaImpresoraRoute: typeof PruebaImpresoraRoute
   VenderRoute: typeof VenderRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prueba-impresora': {
+      id: '/prueba-impresora'
+      path: '/prueba-impresora'
+      fullPath: '/prueba-impresora'
+      preLoaderRoute: typeof PruebaImpresoraRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/vender': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PruebaImpresoraRoute: PruebaImpresoraRoute,
   VenderRoute: VenderRoute,
 }
 export const routeTree = rootRouteImport
